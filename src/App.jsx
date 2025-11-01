@@ -5,15 +5,14 @@ import "./App.css";
 import { ChatProvider } from "./Components/Context";
 import Home from "./Components/Home";
 import Login from "./Components/Login";
-import Register from "./Components/register";
-
+import NewRegister from "./Components/NewRegister";
 function App() {
   return (
     <BrowserRouter>
       
       <ChatProvider>
         <Routes>
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<NewRegister />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
         </Routes>

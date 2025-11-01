@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useChat } from "./Context";
 
-function Register() {
+function NewRegister() {
     const { apiUrl } = useChat();
     const navigate=useNavigate();
     const [formData, setFormData] = useState({
@@ -53,4 +53,4 @@ function Register() {
     )
 }
 
-export default Register
+export default NewRegister;
