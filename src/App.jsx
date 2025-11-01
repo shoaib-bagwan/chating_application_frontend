@@ -1,7 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Add Bootstrap
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-
 import { ChatProvider } from "./Components/Context";
 import Home from "./Components/Home";
 import Login from "./Components/Login";
@@ -12,7 +11,7 @@ function App() {
       
       <ChatProvider>
         <Routes>
-          <Route path="/register" element={<NewRegister />} />
+          <Route path="/" element={<NewRegister />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
         </Routes>
