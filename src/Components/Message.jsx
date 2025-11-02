@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import { useChat } from "./Context";
 
 function Message() {
-    const { apiUrl, openText, selectedUser } = useChat();
+    const { apiUrl, openText, selectedUser,setOpenText } = useChat();
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
 
@@ -33,7 +33,6 @@ function Message() {
             socket.emit("join_room", room);
         }
     }, [socket, sender_id, receiver_id]);
-
 
     // ✅ Listen for new messages
     useEffect(() => {
@@ -92,7 +91,6 @@ function Message() {
         }
     };
 
-
     // ✅ Auto scroll to bottom
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -102,19 +100,27 @@ function Message() {
         <>
             {openText && (
                 <div
-                    className="container py-3 border rounded mt-3 shadow-sm bg-white"
-                    style={{ height: "80vh" }}
+                    className="container-fluid p-2 p-sm-3 border rounded shadow-sm bg-white"
+                    style={{
+                        height: "100vh",
+                        maxHeight: "100vh",
+                        display: "flex",
+                        flexDirection: "column",
+                    }}
                 >
                     {/* Chat Header */}
-                    <div className="bg-primary text-white text-center py-2 rounded mb-3">
+                    <div
+                        className="bg-primary text-white d-flex justify-content-between py-2 px-2 rounded mb-2"
+                        style={{ fontSize: "1rem" }}
+                    >
                         <strong>Chat with User ID: {receiver_id}</strong>
+                        <button className="btn btn-outline-light" onClick={()=>setOpenText(false)}>back</button>
                     </div>
 
                     {/* Chat Messages */}
                     <div
-                        className="overflow-auto"
+                        className="flex-grow-1 overflow-auto mb-2"
                         style={{
-                            height: "65vh",
                             backgroundColor: "#f8f9fa",
                             borderRadius: "10px",
                             padding: "10px",
@@ -125,17 +131,17 @@ function Message() {
                         {messages.length > 0 ? (
                             messages.map((msg, index) => {
                                 const isSender = String(msg.sender_id) === String(sender_id);
-                                const msgDate = new Date( msg.timestamp || new Date());
+                                const msgDate = new Date(msg.timestamp || new Date());
 
-                                // Format message date
                                 const msgDay = msgDate.toDateString();
                                 const today = new Date().toDateString();
-                                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                                const yesterday = new Date(
+                                    Date.now() - 86400000
+                                ).toDateString();
 
-                                // Check if this message's date is new compared to previous one
                                 const prevMsg = messages[index - 1];
                                 const prevMsgDate = prevMsg
-                                    ? new Date( prevMsg.timestamp || new Date()).toDateString()
+                                    ? new Date(prevMsg.timestamp || new Date()).toDateString()
                                     : null;
 
                                 const showDateHeader = msgDay !== prevMsgDate;
@@ -155,7 +161,9 @@ function Message() {
 
                                         {/* 💬 Message Bubble */}
                                         <div
-                                            className={`d-flex mb-2 ${isSender ? "justify-content-end" : "justify-content-start"
+                                            className={`d-flex mb-2 ${isSender
+                                                    ? "justify-content-end"
+                                                    : "justify-content-start"
                                                 }`}
                                         >
                                             <div
@@ -164,10 +172,12 @@ function Message() {
                                                         : "bg-secondary bg-opacity-25 text-dark"
                                                     }`}
                                                 style={{
-                                                    maxWidth: "70%",
+                                                    maxWidth: "80%",
                                                     borderRadius: isSender
                                                         ? "18px 18px 0px 18px"
                                                         : "18px 18px 18px 0px",
+                                                    wordWrap: "break-word",
+                                                    fontSize: "0.9rem",
                                                 }}
                                             >
                                                 <div>{msg.message}</div>
@@ -197,7 +207,11 @@ function Message() {
                     </div>
 
                     {/* Input Field */}
-                    <form className="d-flex mt-2" onSubmit={submitHandler}>
+                    <form
+                        className="d-flex mt-auto mb-1"
+                        onSubmit={submitHandler}
+                        style={{ gap: "6px" }}
+                    >
                         <input
                             type="text"
                             name="message"
@@ -206,10 +220,19 @@ function Message() {
                                 setFormData({ ...formData, message: e.target.value })
                             }
                             placeholder="Type a message..."
-                            className="form-control me-2"
+                            className="form-control"
+                            style={{
+                                borderRadius: "20px",
+                                fontSize: "0.9rem",
+                                padding: "10px",
+                            }}
                             required
                         />
-                        <button type="submit" className="btn btn-primary">
+                        <button
+                            type="submit"
+                            className="btn btn-primary px-3"
+                            style={{ borderRadius: "20px" }}
+                        >
                             Send
                         </button>
                     </form>
