@@ -10,6 +10,7 @@ function Login() {
         email: "",
         password: "",
     });
+    const [loading, setLoading] = useState(false);
 
     const get = (e) => {
         const { name, value } = e.target;
@@ -18,11 +19,13 @@ function Login() {
 
     const submitHandler = async (e) => {
         e.preventDefault();
+        setLoading(true)
         try {
             const res = await axios.post(`${apiUrl}/api/user/login`, formData);
             console.log(res.data)
             localStorage.setItem("sender_id", res.data.user._id);
             localStorage.setItem("username", res.data.user.username);
+            localStorage.setItem("email", res.data.user.email);
             alert("Login successful");
             navigate("/home");
         } catch (e) {
@@ -55,9 +58,12 @@ function Login() {
                         required
                     />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">
+                {!loading ? (<button type="submit" className="btn btn-primary w-100">
                     Login
-                </button>
+                </button>) : (<button className="btn btn-primary w-100" type="button" disabled>
+                    <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    <span role="status">Loading...</span>
+                </button>)}
             </form>
         </div>
     );
